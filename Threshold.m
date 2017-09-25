@@ -62,29 +62,52 @@ switch (operation)
         
     case 7
         I = imread('lena.jpg');
-        
-        %{
-            a.	Photographic Negative
-            b.	Gamma
-            c.	Logarithmic
-            d.	Contrast Stretching
-            e.	fspecial (sobel & prewitt)
-            f.	bit splicing (Gray)
-        %}
-        
+  
+        %1
         negative_I = imcomplement(I);
         
-        subplot(3,3,1), imshow(negative_I); title('Negative');
-        
-        gamma = 0.4
+        subplot(4,4,1), imshow(negative_I); title('Negative');
+        %2
+        gamma = 0.8;
         gamma_low = double(I).^gamma;
-        subplot(3,3,2), imshow(B); title('Gamma 0.4');
+        subplot(4,4,2), imshow(uint8(gamma_low)); title('Gamma 0.8');
        
-        gamma = 1.9
-        gamma_high= double(I).^gamma;
-        subplot(3,3,3), imshow(B); title('Gamme 1.9');
+        gamma = 1.2;
+        gamma_high = double(I).^gamma;
+        subplot(4,4,3), imshow(uint8(gamma_high)); title('Gamme 1.2');
         
-        subplot(3,3,1), imshow(B); title('');
+        %3
+        i = im2double(I);
+        J = 1*log(1+i);
+        subplot(4,4,4), imshow(J); title('1*log(1+image)');
+        
+        J1 = 2*log(1+i);
+        subplot(4,4,5), imshow(J1); title('2*log(1+image)');
+        
+        J2 = 5*log(1+i);
+        subplot(4,4,6), imshow(J2); title('5*log(1+image)');
+        
+        %4
+        prewitt_method = fspecial('prewitt');
+        prewitt_implementation = imfilter(I,prewitt_method);
+        subplot(4,4,7), imshow(prewitt_implementation); title('prewitt');
+        
+        sobel_method = fspecial('sobel');
+        sobel_implementation = imfilter(I,sobel_method);
+        subplot(4,4,8), imshow(sobel_implementation); title('sobel');
+        
+        
+        %5
+        ctr = 1;
+        Z = zeros(size(I));
+        for ind = 1:8
+            Z = bitset(Z, 8,bitget(I, ctr));
+            Z = uint8(Z);
+            
+            subplot(4,4,ind+8), imshow(Z); title(ind);
+            ctr = ctr + 1;
+        end
+
 end
 
 %{
